@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ANUTCHAI APARTMENT</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            background-image: url("./images/background.jpg");
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100%;
+            widows: 100%;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #user-container {
+            width: 500px;
+            padding: 32px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #report {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        #warn {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="user-container">
+            <h5 id="room-number">ห้อง </h5>
+            <h5 id="name">ชื่อผู้แจ้ง </h5>
+            <div id="report" class="row">
+                <div class="col col-12">
+                    <h5>รายงานการแจ้งปัญหา</h5>
+                    <form id="report-form">
+                        <div class="form-group">
+                            <label for="report">รายละเอียด</label>
+                            <textarea class="form-control" id="detail" placeholder="กรอกรายละเอียด" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">ส่งรายงาน</button>
+                    </form>
+                </div>
+            </div>
+
+            <a href="user.html">
+                <button class="btn btn-outline-secondary btn-block">ย้อนกลับ</button>
+            </a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>    
+        if (!localStorage.hasOwnProperty('user')) {
+            window.location.href = "index.html";
+        }
+        $(document).ready(function () {
+            const user = JSON.parse(localStorage.getItem('user'));
+            console.log(user);
+            $("#name").append(user.user_firstname + " " + user.user_lastname);
+            $("#room-number").append(user.room_number);
+            $("#report-form").submit(function (event) {
+                event.preventDefault();
+                $.post(
+                    'http://localhost/anutchai/api/report/create.php',
+                    {
+                        rent_id: user.rent_id,
+                        detail: $("#detail").val()
+                    }
+                ).then(function (response) {
+                    console.log(response);
+                    alert(response.message);
+                    $("#detail").val("")
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

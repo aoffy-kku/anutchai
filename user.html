@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ANUTCHAI APARTMENT</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            background-image: url("./images/background.jpg");
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100%;
+            widows: 100%;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #user-container {
+            width: 500px;
+            padding: 32px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #payment {
+            margin-top: 24px;
+        }
+
+        #logout {
+            margin-top: 8px; 
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="user-container">
+            <h5 id="room-number">เลขห้อง </h5>
+            <h5 id="name">ชื่อผู้ใช้ </h5>
+            <div id="payment" class="row">
+                <div class="col col-12">
+                    <h5>รายการค้างชำระ</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ลำดับ</th>
+                                <th scope="col">วัน/เดือน/ปี</th>
+                                <th scope="col">ยอดเงิน</th>
+                                <th scope="col">ดูรายละเอียด</th>
+                            </tr>
+                        </thead>
+                        <tbody id="new">
+                            <!-- <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="payment" class="row">
+                <div class="col col-12">
+                    <h5>ประวัติการชำระเงิน</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ลำดับ</th>
+                                <th scope="col">วัน/เดือน/ปี</th>
+                                <th scope="col">ยอดเงิน</th>
+                                <th scope="col">ดูรายละเอียด</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history">
+                            <!-- <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <a href="problem.html">
+                <button class="btn btn-outline-warning btn-block">แจ้งปัญหา</button>
+            </a>
+            <button class="btn btn-outline-secondary btn-block" id="logout">ออกจากระบบ</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>    
+        $(document).ready(function () {
+            if (!localStorage.hasOwnProperty('user')) {
+                window.location.href = "index.html";
+            } else {
+                const user = JSON.parse(localStorage.getItem('user'));
+                console.log(user);
+                $("#name").append(user.user_firstname + " " + user.user_lastname);
+                $("#room-number").append(user.room_number);
+                $("#logout").click(function () {
+                    localStorage.clear();
+                    window.location.href = "index.html";
+                });
+                $.get(
+                    'http://localhost/anutchai/api/expenses/read.php?rent_id=' + user.rent_id
+                ).then(function (response) {
+                    if (response.success) {
+
+                    } else {
+                        $("#new").html("<tr><td colspan='4'>" + response.message + "</td></tr>");
+                        $("#history").html("<tr><td colspan='4'>" + response.message + "</td></tr>");
+                    }
+                    $("#container").show();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

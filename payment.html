@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ANUTCHAI APARTMENT</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            background-image: url("./images/background.jpg");
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 100%;
+            widows: 100%;
+            margin: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #user-container {
+            width: 500px;
+            padding: 32px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        #payment {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        #warn {
+            color: red;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="user-container">
+            <h5>บิลรอบเดือน มีนาคม 2561</h5>
+            <h5>ชื่อผู้ใช้ เนติพงศ์ กาฬะเพ็ญ</h5>
+            <div id="payment" class="row">
+                <div class="col col-12">
+                    <h5>รายละเอียด</h5>
+                    <ul>
+                        <li><h6>ค่าห้อง 2200 บาท</h6></li>
+                        <li><h6>ค่าไฟ 20 หน่วย(หน่วยละ 8 บาท) 160 บาท</h6></li>
+                        <li><h6>ค่าน้ำ 2 หน่วย(หน่วยละ 30 บาท) 60 บาท</h6></li>
+                    </ul>
+                    <h6>รวมทั้งหมด 2420 บาท</h6>
+                    <small id="warn">* ชำระไม่เกินวันที 5 ของทุกเดือน</small>
+                </div>
+            </div>
+            <a href="user.html">
+                <button class="btn btn-outline-secondary btn-block">ย้อนกลับ</button>
+            </a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="./js/bootstrap.min.js"></script>
+</body>
+
+</html>
