@@ -6,7 +6,7 @@
   include_once("../config/database.php");
 
   // get model
-  include_once("../model/expenses.php");
+  include_once("../model/room.php");
   
   // create object database
   $database = new Database();
@@ -15,11 +15,9 @@
   $db = $database->getConnection();
 
   // create object user with database connection
-  $expenses = new Expenses($db);
+  $room = new Room($db);
 
-  extract($_GET);
-  $expenses->rent_id = $rent_id;
-  $result = $expenses->read();
+  $result = $room->readEmpty();
   
   echo $result;
 

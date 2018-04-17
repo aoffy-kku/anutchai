@@ -9,15 +9,15 @@
     public $user_id;
     public $user_firstname;
     public $user_lastname;
-    public $user_brithdate;
-    public $user_nationally;
+    public $user_birthdate;
+    public $user_nationallity;
     public $user_religion;
     public $user_cardnumber;
     public $user_address;
     public $user_moo;
     public $user_tumbon;
     public $user_ampor;
-    public $user_provice;
+    public $user_province;
     public $user_zip ;
     public $user_tel;
     public $username;
@@ -32,7 +32,7 @@
     }
 
     public function read() {
-      $query = "SELECT * FROM ". $this->table_name;
+      $query = "SELECT * FROM ". $this->table_name ." WHERE enabled = 1";
       $stmt = $this->conn->prepare($query);
       try {
         $stmt->execute();
@@ -63,46 +63,63 @@
     }
 
     public function create() {
-      $query = "INSERT INTO `user` 
-      (`username`, `password`, `personal_id`, `personal_image`, `flname`, `email`, `birthday`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `created_at`, `updated_at`) 
-      VALUES 
-      (:username, :password, :personal_id, :personal_image, :flname, :email, :birthday, :question1, :answer1, :question2, :answer2, :question3, :answer3, NOW(), NOW())";
+      $query = "INSERT INTO `users` (`user_firstname`, `user_lastname`, `user_birthdate`, `user_nationallity`, `user_religion`, `user_cardnumber`, `user_address`, `user_moo`, `user_tumbon`, `user_ampor`, `user_province`, `user_zip`, `user_tel`, `username`, `password`) VALUES (:user_firstname, :user_lastname, :user_birthdate, :user_nationallity, :user_religion, :user_cardnumber, :user_address, :user_moo, :user_tumbon, :user_ampor, :user_province, :user_zip, :user_tel, :username, :password)";
         
       $stmt = $this->conn->prepare($query);
-
-      $this->username=htmlspecialchars(strip_tags($this->username));
-      $this->password=htmlspecialchars(strip_tags($this->password));
-      $this->personal_id=htmlspecialchars(strip_tags($this->personal_id));
-      $this->personal_image=htmlspecialchars(strip_tags($this->personal_image));
-      $this->flname=htmlspecialchars(strip_tags($this->flname));
-      $this->email=htmlspecialchars(strip_tags($this->email));
-      $this->birthday=htmlspecialchars(strip_tags($this->birthday));
-      $this->question1=htmlspecialchars(strip_tags($this->question1));
-      $this->answer1=htmlspecialchars(strip_tags($this->answer1));
-      $this->question2=htmlspecialchars(strip_tags($this->question2));
-      $this->answer2=htmlspecialchars(strip_tags($this->answer2));
-      $this->question3=htmlspecialchars(strip_tags($this->question3));
-      $this->answer3=htmlspecialchars(strip_tags($this->answer3));
-
+      $stmt->bindParam(":user_firstname", $this->user_firstname);
+      $stmt->bindParam(":user_lastname", $this->user_lastname);
+      $stmt->bindParam(":user_birthdate", $this->user_birthdate);
+      $stmt->bindParam(":user_nationallity", $this->user_nationallity);
+      $stmt->bindParam(":user_religion", $this->user_religion);
+      $stmt->bindParam(":user_cardnumber", $this->user_cardnumber);
+      $stmt->bindParam(":user_address", $this->user_address);
+      $stmt->bindParam(":user_moo", $this->user_moo);
+      $stmt->bindParam(":user_tumbon", $this->user_tumbon);
+      $stmt->bindParam(":user_ampor", $this->user_ampor);
+      $stmt->bindParam(":user_province", $this->user_province);
+      $stmt->bindParam(":user_zip", $this->user_zip);
+      $stmt->bindParam(":user_tel", $this->user_tel);
       $stmt->bindParam(":username", $this->username);
       $stmt->bindParam(":password", $this->password);
-      $stmt->bindParam(":personal_id", $this->personal_id);
-      $stmt->bindParam(":personal_image", $this->personal_image);
-      $stmt->bindParam(":flname", $this->flname);
-      $stmt->bindParam(":email", $this->email);
-      $stmt->bindParam(":birthday", $this->birthday);
-      $stmt->bindParam(":question1", $this->question1);
-      $stmt->bindParam(":answer1", $this->answer1);
-      $stmt->bindParam(":question2", $this->question2);
-      $stmt->bindParam(":answer2", $this->answer2);
-      $stmt->bindParam(":question3", $this->question3);
-      $stmt->bindParam(":answer3", $this->answer3);
-      
       try {
         $stmt->execute();
         return json_encode(array(
           "success" => true,
           "message" => $stmt->rowCount(). " row(s) inserted.",
+        ));
+      } catch(PDOExeption $e){
+        return json_encode(array(
+          "success" => false,
+          "message" => $e,
+        ));
+      }
+    }
+
+    public function edit() {
+      $query = "UPDATE `users` SET `user_firstname` = :user_firstname, `user_lastname` = :user_lastname, `user_lastname` = :user_lastname, `user_nationallity` = :user_nationallity, `user_religion` = :user_religion, `user_cardnumber` = :user_cardnumber, `user_address` = :user_address, `user_moo` = :user_moo, `user_tumbon`= :user_tumbon, `user_ampor`= :user_ampor, `user_province` = :user_province, `user_zip` = :user_zip, `user_tel` = :user_tel, `username` = :username, `password` = :password, `created_at` = CURRENT_TIMESTAMP WHERE `user_id` = :user_id";
+        
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(":user_id", $this->user_id);
+      $stmt->bindParam(":user_firstname", $this->user_firstname);
+      $stmt->bindParam(":user_lastname", $this->user_lastname);
+      $stmt->bindParam(":user_birthdate", $this->user_birthdate);
+      $stmt->bindParam(":user_nationallity", $this->user_nationallity);
+      $stmt->bindParam(":user_religion", $this->user_religion);
+      $stmt->bindParam(":user_cardnumber", $this->user_cardnumber);
+      $stmt->bindParam(":user_address", $this->user_address);
+      $stmt->bindParam(":user_moo", $this->user_moo);
+      $stmt->bindParam(":user_tumbon", $this->user_tumbon);
+      $stmt->bindParam(":user_ampor", $this->user_ampor);
+      $stmt->bindParam(":user_province", $this->user_province);
+      $stmt->bindParam(":user_zip", $this->user_zip);
+      $stmt->bindParam(":user_tel", $this->user_tel);
+      $stmt->bindParam(":username", $this->username);
+      $stmt->bindParam(":password", $this->password);
+      try {
+        $stmt->execute();
+        return json_encode(array(
+          "success" => true,
+          "message" => $stmt->rowCount(). " row(s) updated.",
         ));
       } catch(PDOExeption $e){
         return json_encode(array(
@@ -177,5 +194,62 @@
         ));
       }
     }
+
+    public function delete() {
+      $query = "UPDATE users SET users.enabled = 0 WHERE users.user_id = :user_id AND (EXISTS (SELECT rent.user_id FROM rent WHERE rent.user_id = :user_id AND rent.enabled = 0) OR NOT EXISTS (SELECT rent.user_id FROM rent WHERE rent.user_id = :user_id AND rent.enabled = 1))";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(":user_id", $this->user_id);
+      try {
+        $stmt->execute();
+        $row = $stmt->rowCount();
+        if($row === 0) {
+          return json_encode(array(
+            "success" => false,
+            "message" => "ไม่สามารถลบผู้ใช้ได้ เนื่องจากยังไม่หมดสัญญาเช่า",
+          ));
+        } else {
+          return json_encode(array(
+            "success" => true,
+            "message" => $stmt->rowCount(). " row(s) deleted.",
+          ));
+        }
+      } catch(PDOException $e) {
+        return json_encode(array(
+          "success" => false,
+          "message" => $e,
+        ));
+      }
+    }
+
+    public function readNoRent() {
+      $query = "SELECT * FROM users WHERE users.enabled = 1 AND users.admin = 0 AND NOT EXISTS (SELECT rent.user_id FROM rent WHERE rent.user_id = users.user_id AND rent.enabled = 1)";
+      $stmt = $this->conn->prepare($query);
+      try {
+        $stmt->execute();
+        $row = $stmt->rowCount();
+        if($row === 0) {
+          return json_encode(array(
+            "success" => false,
+            "message" => "ไม่มีข้อมูลผู้ใช้",
+          ));
+        } else {
+          $user_arr = array();
+          $user_arr["success"] = true;
+          $user_arr["message"]  = array();
+
+          while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            extract($row);
+            array_push($user_arr["message"], $row);
+          }
+          return json_encode($user_arr);
+        }
+      } catch(PDOException $e) {
+        return json_encode(array(
+          "success" => false,
+          "message" => $e,
+        ));
+      }
+    }
+
   }
 ?>

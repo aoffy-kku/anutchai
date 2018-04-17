@@ -10,7 +10,7 @@
     $users = new Users($db);
 
     extract($_POST);
-
+    $users->user_id = $user_id;
     $users->user_firstname = $user_firstname;
     $users->user_lastname = $user_lastname;
     $users->user_birthdate = $user_birthdate;
@@ -30,6 +30,6 @@
     // print_r($_POST);
     // print_r($users);
 
-    $result = $users->create();
+    $result = $users->edit();
     echo $result;
 ?>

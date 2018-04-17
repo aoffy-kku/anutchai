@@ -6,7 +6,7 @@
   include_once("../config/database.php");
 
   // get model
-  include_once("../model/expenses.php");
+  include_once("../model/rent.php");
   
   // create object database
   $database = new Database();
@@ -15,11 +15,12 @@
   $db = $database->getConnection();
 
   // create object user with database connection
-  $expenses = new Expenses($db);
+  $rent = new Rent($db);
 
-  extract($_GET);
-  $expenses->rent_id = $rent_id;
-  $result = $expenses->read();
+  extract($_POST);
+  $rent->rent_id = $rent_id;
+
+  $result = $rent->delete();
   
   echo $result;
 

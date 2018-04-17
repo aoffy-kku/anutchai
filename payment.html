@@ -43,24 +43,41 @@
         #warn {
             color: red;
         }
-
     </style>
 </head>
 
 <body>
     <div id="container">
         <div id="user-container">
-            <h5>บิลรอบเดือน มีนาคม 2561</h5>
-            <h5>ชื่อผู้ใช้ เนติพงศ์ กาฬะเพ็ญ</h5>
+            <h5>บิลรอบเดือน
+                <span id="created_at"></span>
+            </h5>
+            <h5>ชื่อผู้ใช้
+                <span id="user_name"></span>
+            </h5>
             <div id="payment" class="row">
                 <div class="col col-12">
                     <h5>รายละเอียด</h5>
                     <ul>
-                        <li><h6>ค่าห้อง 2200 บาท</h6></li>
-                        <li><h6>ค่าไฟ 20 หน่วย(หน่วยละ 8 บาท) 160 บาท</h6></li>
-                        <li><h6>ค่าน้ำ 2 หน่วย(หน่วยละ 30 บาท) 60 บาท</h6></li>
+                        <li>
+                            <h6>ค่าห้อง
+                                <span id="p_room"></span> บาท</h6>
+                        </li>
+                        <li style="display: flex;">
+                            <h6>ค่าไฟ
+                                <span id="u_electricity"></span> หน่วย(หน่วยละ
+                                <span id="p_electricity"></span> บาท)
+                                <span id="t_electricity"></span> บาท</h6>
+                        </li>
+                        <li>
+                            <h6>ค่าน้ำ
+                                <span id="u_water"></span> หน่วย(หน่วยละ
+                                <span id="p_water"></span> บาท)
+                                <span id="t_water"></span> บาท</h6>
+                        </li>
                     </ul>
-                    <h6>รวมทั้งหมด 2420 บาท</h6>
+                    <h6>รวมทั้งหมด
+                        <span id="total"></span> บาท</h6>
                     <small id="warn">* ชำระไม่เกินวันที 5 ของทุกเดือน</small>
                 </div>
             </div>
@@ -69,11 +86,37 @@
             </a>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script>
+        if (!localStorage.hasOwnProperty('user')) {
+            window.location.href = "index.html";
+        } else {
+            $(document).ready(function () {
+                const user = JSON.parse(localStorage.getItem("user"));
+                let url = new URL(window.location.href);
+                $.get(
+                    'http://localhost/anutchai/api/expenses/readbyid.php?rent_id=' + user.rent_id + "&exp_id=" + url.searchParams.get("exp_id")
+                ).then(function (response) {
+                    if (response.success) {
+                        $("#user_name").html(`${user.user_firstname} ${user.user_lastname}`);
+                        $("#created_at").html(`${response.message[0].created_at}`);
+                        $("#p_room").html(`${response.message[0].p_room}`);
+                        $("#u_electricity").html(`${response.message[0].u_electricity}`);
+                        $("#p_electricity").html(`${response.message[0].p_electricity}`);
+                        $("#t_electricity").html(`${(response.message[0].u_electricity * response.message[0].p_electricity)}`);
+                        $("#u_water").html(`${response.message[0].u_water}`);
+                        $("#p_water").html(`${response.message[0].p_water}`);
+                        $("#t_water").html(`${(response.message[0].u_water * response.message[0].p_water)}`);
+                        $("#total").html(((response.message[0].p_room * 1) + ((response.message[0].u_electricity * response.message[0].p_electricity) + (response.message[0].u_water * response.message[0].p_water))));
+                    }
+                });
+            });
+        }
+
+    </script>
 </body>
 
 </html>

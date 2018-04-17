@@ -40,7 +40,7 @@
         }
 
         #logout {
-            margin-top: 8px; 
+            margin-top: 8px;
         }
     </style>
 </head>
@@ -147,7 +147,31 @@
                     'http://localhost/anutchai/api/expenses/read.php?rent_id=' + user.rent_id
                 ).then(function (response) {
                     if (response.success) {
-
+                        let newROw;
+                        let historyRow;
+                        let hisCount = 0;
+                        let newCount = 0;
+                        response.message.map(function (data, index) {
+                            if (data.status == 1) {
+                                hisCount++;
+                                history += `<tr>
+                                    <td>${hisCount}</td>
+                                    <td>${data.created_at}</td>
+                                    <td>${((data.p_room * 1) + (data.u_electricity * data.p_electricity) + (data.u_water * data.p_water))}</td>
+                                    <td><a href="payment.html?exp_id=${data.exp_id}"><button type="button" class="btn btn-link">ดูรายละเอียด</button></a></td>
+                                </tr>`;
+                            } else {
+                                newCount++;
+                                newROw += `<tr>
+                                    <td>${newCount}</td>
+                                    <td>${data.created_at}</td>
+                                    <td>${((data.p_room * 1) + (data.u_electricity * data.p_electricity) + (data.u_water * data.p_water))}</td>
+                                    <td><a href="payment.html?exp_id=${data.exp_id}&rent_id=${data.rent_id}"><button type="button" class="btn btn-link">ดูรายละเอียด</button></a></td>
+                                </tr>`;
+                            }
+                            $("#new").html(newROw);
+                            $("#history").html(historyRow);
+                        });
                     } else {
                         $("#new").html("<tr><td colspan='4'>" + response.message + "</td></tr>");
                         $("#history").html("<tr><td colspan='4'>" + response.message + "</td></tr>");

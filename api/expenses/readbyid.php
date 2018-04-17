@@ -18,8 +18,9 @@
   $expenses = new Expenses($db);
 
   extract($_GET);
+  $expenses->exp_id = $exp_id;
   $expenses->rent_id = $rent_id;
-  $result = $expenses->read();
+  $result = $expenses->readById();
   
   echo $result;
 

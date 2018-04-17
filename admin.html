@@ -18,12 +18,6 @@
             margin: 0;
         }
 
-        #container {
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-
         #login-container {
             width: 300px;
             padding: 50px;
@@ -34,70 +28,880 @@
             align-items: center;
         }
 
-        #login-form {
-            margin-top: 16px;
+        .menu {
+            width: 15%;
+            height: 100%;
+            position: fixed;
+            background-color: orange;
+            -webkit-box-shadow: -1px 6px 16px 12px rgba(0, 0, 0, 0.10);
+            -moz-box-shadow: -1px 6px 16px 12px rgba(0, 0, 0, 0.10);
+            box-shadow: -1px 6px 16px 12px rgba(0, 0, 0, 0.10);
+            z-index: 1;
+            padding-top: 32px;
+            padding-left: 8px;
+            padding-right: 8px;
+            display: flex;
+            flex-direction: column;
         }
 
-        #admin-container {
-            width: 100%;
-            margin: 16px;
-            padding: 50px;
-            background: #ffffff;
+        .content {
+            z-index: 0;
+            width: 85%;
+            height: auto;
+            min-height: 100%;
+            position: absolute;
+            background-color: white;
+            right: 0;
+            padding-top: 32px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .hide {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="container" id="container">
-        <div class="row">
-            <div class="col col-12">
-                <div id="login-container">
-                    <h4>เข้าสู่ระบบผู้ดูแล</h4>
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label for="username">ชื่อผู้ใช้</label>
-                            <input type="text" class="form-control" id="username" placeholder="กรอกชื่อผู้ใช้" required>
+    <div class="menu">
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-login">เข้าสู่ระบบ</button>
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-user">จัดการผู้ใช้</button>
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-room">จัดการห้อง</button>
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-pay">จัดการค่าใช้จ่าย</button>
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-report">จัดการคำร้อง</button>
+        <button type="button" class="btn btn-block btn-outline-light hide" id="btn-logout">ออกจากระบบ</button>
+    </div>
+    <div class="content">
+        <div class="container">
+            <div id="login-row" class="hide">
+                <div class="row" style="display: flex; justify-content: center;">
+                    <div class="col col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div id="login">
+                            <h3>เข้าสู่ระบบผู้ดูแล</h3>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <label for="login_username">ชื่อผู้ใช้</label>
+                                    <input type="text" class="form-control" id="login_username" placeholder="กรอกชื่อผู้ใช้" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="login_password">รหัสผ่าน</label>
+                                    <input type="password" class="form-control" id="login_password" placeholder="กรอกรหัสผ่าน" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="password">รหัสผ่าน</label>
-                            <input type="password" class="form-control" id="password" placeholder="กรอกรหัสผ่าน" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col col-12">
-                <div id="admin-container">
-
+            <div id="user-row" class="row hide">
+                <div class="col col-12">
+                    <div id="usermanager">
+                        <h3>จัดการผู้ใช้</h3>
+                        <div class="float-right mb-2">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#userAddModal">เพิ่มผู้ใช้</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับที่</th>
+                                    <th>ชื่อต้น</th>
+                                    <th>สกุล</th>
+                                    <th>วันเกิด</th>
+                                    <th>สัญชาติ</th>
+                                    <th>ศาสนา</th>
+                                    <th>รหัสประชาชน</th>
+                                    <th>ที่อยู่</th>
+                                    <th>เบอร์ติดต่อ</th>
+                                    <th>แก้ไข</th>
+                                    <th>ลบ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-body">
+                                <!-- RENDER USERS HERE -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="room-row" class="row hide">
+                <div class="col col-12">
+                    <div id="roommanager">
+                        <h3>จัดการห้อง</h3>
+                        <div class="float-right mb-2">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#roomAddModal" id="room-add-btn">เพิ่มสัญญาเช่า</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับที่</th>
+                                    <th>เลขห้อง</th>
+                                    <th>ผู้เช่า</th>
+                                    <th>ลบ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="room-body">
+                                <!-- RENDER ROOM WITH RENT HERE -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="pay-row" class="row hide">
+                <div class="col col-12">
+                    <div id="paymentmanager">
+                        <h3>จัดการค่าใช้จ่าย</h3>
+                        <div class="float-right mb-2">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#payAddModal" id="pay-add-btn">เพิ่มใบชำระหนี้</button>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับที่</th>
+                                    <th>วันที่</th>
+                                    <th>เลขห้อง</th>
+                                    <th>ค่าห้อง</th>
+                                    <th>หน่วยไฟ</th>
+                                    <th>ค่าไฟ</th>
+                                    <th>หน่วยน้ำ</th>
+                                    <th>ค่าน้ำ</th>
+                                    <th>รวม</th>
+                                    <th>สถานะ</th>
+                                    <th>แก้ไข</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pay-body">
+                                <!-- RENDER PAYMENT HERE -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="report-row" class="row hide">
+                <div class="col col-12">
+                    <div id="reportmanager">
+                        <h3>จัดการคำร้อง</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับที่</th>
+                                    <th>เลขห้อง</th>
+                                    <th>รายละเอียด</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-body">
+                                <!-- RENDER REPORT HERE -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- User Add Modal -->
+    <div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="userAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userAddModalLabel">เพิ่มผู้ใช้</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="add-user-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="user_firstname">ชื่อต้น</label>
+                            <input type="text" class="form-control" id="user_firstname" placeholder="ชื่อต้น" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_lastname">นามสกุล</label>
+                            <input type="text" class="form-control" id="user_lastname" placeholder="นามสกุล" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_birthdate">วันเกิด</label>
+                            <input type="date" class="form-control" id="user_birthdate" placeholder="วันเกิด" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_nationallity">สัญชาติ</label>
+                            <input type="text" class="form-control" id="user_nationallity" placeholder="สัญชาติ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_religion">ศาสนา</label>
+                            <input type="text" class="form-control" id="user_religion" placeholder="ศาสนา" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_cardnumber">เลขประจำตัวประชาชน</label>
+                            <input type="text" class="form-control" id="user_cardnumber" placeholder="เลขประจำตัวประชาชน" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_address">บ้านเลขที่</label>
+                            <input type="text" class="form-control" id="user_address" placeholder="บ้านเลขที่" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_address">หมู่ที่</label>
+                            <input type="text" class="form-control" id="user_moo" placeholder="หมู่ที่" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_tumbon">ตำบล</label>
+                            <input type="text" class="form-control" id="user_tumbon" placeholder="ตำบล" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_ampor">อำเภอ</label>
+                            <input type="text" class="form-control" id="user_ampor" placeholder="อำเภอ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_province">จังหวัด</label>
+                            <input type="text" class="form-control" id="user_province" placeholder="จังหวัด" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_zip">รหัสไปรษณีย์</label>
+                            <input type="text" class="form-control" id="user_zip" placeholder="รหัสไปรษณีย์" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_tel">เบอร์ติดต่อ</label>
+                            <input type="text" class="form-control" id="user_tel" placeholder="เบอร์ติดต่อ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="username">ชื่อผู้ใช้</label>
+                            <input type="text" class="form-control" id="username" placeholder="ชื่อผู้ใช้" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">รหัสผ่าน</label>
+                            <input type="password" class="form-control" id="password" placeholder="รหัสผ่าน" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">เพิ่ม</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- User Add Modal -->
+
+    <!-- User Edit Modal -->
+    <div class="modal fade" id="userEditModal" tabindex="-1" role="dialog" aria-labelledby="userEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userEditModalLabel">แก้ไขผู้ใช้</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="edit-user-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- <label for="edit_user_id">USER_ID</label> -->
+                            <input type="hidden" class="form-control" id="edit_user_id" placeholder="ชื่อต้น" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_firstname">ชื่อต้น</label>
+                            <input type="text" class="form-control" id="edit_user_firstname" placeholder="ชื่อต้น" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_lastname">นามสกุล</label>
+                            <input type="text" class="form-control" id="edit_user_lastname" placeholder="นามสกุล" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_birthdate">วันเกิด</label>
+                            <input type="date" class="form-control" id="edit_user_birthdate" placeholder="วันเกิด" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_nationallity">สัญชาติ</label>
+                            <input type="text" class="form-control" id="edit_user_nationallity" placeholder="สัญชาติ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_religion">ศาสนา</label>
+                            <input type="text" class="form-control" id="edit_user_religion" placeholder="ศาสนา" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_cardnumber">เลขประจำตัวประชาชน</label>
+                            <input type="text" class="form-control" id="edit_user_cardnumber" placeholder="เลขประจำตัวประชาชน" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_address">บ้านเลขที่</label>
+                            <input type="text" class="form-control" id="edit_user_address" placeholder="บ้านเลขที่" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_address">หมู่ที่</label>
+                            <input type="text" class="form-control" id="edit_user_moo" placeholder="หมู่ที่" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_tumbon">ตำบล</label>
+                            <input type="text" class="form-control" id="edit_user_tumbon" placeholder="ตำบล" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_ampor">อำเภอ</label>
+                            <input type="text" class="form-control" id="edit_user_ampor" placeholder="อำเภอ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_province">จังหวัด</label>
+                            <input type="text" class="form-control" id="edit_user_province" placeholder="จังหวัด" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_zip">รหัสไปรษณีย์</label>
+                            <input type="text" class="form-control" id="edit_user_zip" placeholder="รหัสไปรษณีย์" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_user_tel">เบอร์ติดต่อ</label>
+                            <input type="text" class="form-control" id="edit_user_tel" placeholder="เบอร์ติดต่อ" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_username">ชื่อผู้ใช้</label>
+                            <input type="text" class="form-control" id="edit_username" placeholder="ชื่อผู้ใช้" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_password">รหัสผ่าน</label>
+                            <input type="password" class="form-control" id="edit_password" placeholder="รหัสผ่าน" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- User Edit Modal -->
+
+    <!-- Room Add Modal -->
+    <div class="modal fade" id="roomAddModal" tabindex="-1" role="dialog" aria-labelledby="roomAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomAddModalLabel">เพิ่มสัญญาเช่า</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="add-room-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="room_id">เลขห้อง</label>
+                            <select class="form-control" id="room_room_id" required>
+                                <!-- OPTION HERE -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="room_user_id">ผู้เช่า</label>
+                            <select class="form-control" id="room_user_id" required>
+                                <!-- OPTION HERE -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">เพิ่ม</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Room Add Modal -->
+
+    <!-- Pay Add Modal -->
+    <div class="modal fade" id="payAddModal" tabindex="-1" role="dialog" aria-labelledby="payAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="payAddModalLabel">เพิ่มใบชำระหนี้</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="add-pay-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="pay_rent_id">เลขห้อง</label>
+                            <select class="form-control" id="pay_rent_id" required>
+                                <!-- OPTION HERE -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pay_p_room">ค่าห้อง</label>
+                            <input type="number" class="form-control" id="pay_p_room" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="pay_u_electricity">หน่วยไฟ</label>
+                            <input type="number" class="form-control" id="pay_u_electricity" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="pay_p_electricity">ราคา/หน่วยไฟ</label>
+                            <input type="number" class="form-control" id="pay_p_electricity" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="pay_u_water">หน่วยน้ำ</label>
+                            <input type="number" class="form-control" id="pay_u_water" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="pay_p_water">ราคา/หน่วยน้ำ</label>
+                            <input type="number" class="form-control" id="pay_p_water" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">เพิ่ม</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Pay Add Modal -->
+
+    <!-- Pay Edit Modal -->
+    <div class="modal fade" id="payEditModal" tabindex="-1" role="dialog" aria-labelledby="payEditModallLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="payEditModalLabel">แก้ไขใบชำระหนี้</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="edit-pay-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- <label for="edit_pay_exp_id">ID</label> -->
+                            <input type="hidden" class="form-control" id="edit_pay_exp_id" required />
+                        </div>
+                        <div class="form-group">
+                            <!-- <label for="edit_pay_rent_id">เลขห้อง</label> -->
+                            <input type="hidden" class="form-control" id="edit_pay_rent_id" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_created_at">วันที่</label>
+                            <input type="text" class="form-control" id="edit_pay_created_at" required readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_roomt_number">เลขห้อง</label>
+                            <input type="text" class="form-control" id="edit_pay_room_number" required readonly/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_p_room">ค่าห้อง</label>
+                            <input type="number" class="form-control" id="edit_pay_p_room" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_u_electricity">หน่วยไฟ</label>
+                            <input type="number" class="form-control" id="edit_pay_u_electricity" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_p_electricity">ราคา/หน่วยไฟ</label>
+                            <input type="number" class="form-control" id="edit_pay_p_electricity" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_u_water">หน่วยน้ำ</label>
+                            <input type="number" class="form-control" id="edit_pay_u_water" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_p_water">ราคา/หน่วยน้ำ</label>
+                            <input type="number" class="form-control" id="edit_pay_p_water" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_pay_status">สถานะ</label>
+                            <select class="form-control" id="edit_pay_status" required>
+                                <option value="0">ค้างชำระ</option>
+                                <option value="1">ชำระแล้ว</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-primary">แก้ไข</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Pay Edit Modal -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script>
-        $(document).ready(function () {
-            if (localStorage.hasOwnProperty('admin')) {
-                $("#login-container").hide();
-               
-                $("#container").show();
-            } else {
-                $("#admin-container").hide();
-                $("#login-container").show();
-                $("#container").show();
+        let users = null;
+        // GET USER
+        function getUsers() {
+            $("#btn-login").hide()
+            $("#btn-user").show()
+            $("#btn-room").show()
+            $("#btn-pay").show()
+            $("#btn-report").show()
+            $("#btn-logout").show()
+
+            $("#login-row").hide();
+            $("#room-row").hide();
+            $("#pay-row").hide();
+            $("#report-row").hide();
+            $.get('http://localhost/anutchai/api/users/read.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        users = response.message;
+                        response.message.map(function (data, index) {
+                            if (data.admin == 0) {
+                                rows += `<tr>
+                                    <th>${(index + 1)}</th>
+                                    <th>${data.user_firstname}</th>
+                                    <th>${data.user_lastname}</th>
+                                    <th>${data.user_birthdate}</th>
+                                    <th>${data.user_nationallity}</th>
+                                    <th>${data.user_religion}</th>
+                                    <th>${data.user_cardnumber}</th>
+                                    <th>${data.user_address} หมู่ ${data.user_moo} ตำบล ${data.user_tumbon} อำเภอ ${data.user_ampor} จังหวัด${data.user_province} ${data.user_zip}</th>
+                                    <th>${data.user_tel}</th>
+                                    <th><button type="button" class="btn btn-warning" onclick="toggleUserEditModal(${index})">แก้ไข</button></th>
+                                    <th><button type="button" class="btn btn-danger" onclick="deleteUser(${data.user_id})">ลบ</button></th>
+                                </tr>`;
+                            }
+                        });
+                        $("#user-body").html(rows);
+                        $("#user-row").show();
+                    }
+                });
+        }
+        //GET USER
+
+        // ADD USER
+        $("#add-user-form").submit(function (e) {
+            e.preventDefault();
+            $.post(
+                'http://localhost/anutchai/api/users/create.php',
+                {
+                    user_firstname: $("#user_firstname").val(),
+                    user_lastname: $("#user_lastname").val(),
+                    user_birthdate: $("#user_birthdate").val(),
+                    user_nationallity: $("#user_nationallity").val(),
+                    user_religion: $("#user_religion").val(),
+                    user_cardnumber: $("#user_cardnumber").val(),
+                    user_address: $("#user_address").val(),
+                    user_moo: $("#user_moo").val(),
+                    user_tumbon: $("#user_tumbon").val(),
+                    user_ampor: $("#user_ampor").val(),
+                    user_province: $("#user_province").val(),
+                    user_zip: $("#user_zip").val(),
+                    user_tel: $("#user_tel").val(),
+                    username: $("#username").val(),
+                    password: $("#password").val()
+                }
+            ).then(function (response) {
+                getUsers();
+                alert(response.message);
+                $("#add-user-form").modal('hide');
+            });
+        });
+        // ADD USER
+
+        // EDIT USER
+        function toggleUserEditModal(index) {
+            $("#edit_user_id").val(users[index].user_id);
+            $("#edit_user_firstname").val(users[index].user_firstname);
+            $("#edit_user_lastname").val(users[index].user_lastname);
+            $("#edit_user_birthdate").val(users[index].user_birthdate);
+            $("#edit_user_nationallity").val(users[index].user_nationallity);
+            $("#edit_user_religion").val(users[index].user_religion);
+            $("#edit_user_cardnumber").val(users[index].user_cardnumber);
+            $("#edit_user_address").val(users[index].user_address);
+            $("#edit_user_moo").val(users[index].user_moo);
+            $("#edit_user_tumbon").val(users[index].user_tumbon);
+            $("#edit_user_ampor").val(users[index].user_ampor);
+            $("#edit_user_province").val(users[index].user_province);
+            $("#edit_user_zip").val(users[index].user_zip);
+            $("#edit_user_tel").val(users[index].user_tel);
+            $("#edit_username").val(users[index].username);
+            $("#edit_password").val(users[index].password);
+            $("#userEditModal").modal('show');
+        }
+
+        $("#edit-user-form").submit(function (e) {
+            e.preventDefault();
+            $.post(
+                'http://localhost/anutchai/api/users/edit.php',
+                {
+                    user_id: $("#edit_user_id").val(),
+                    user_firstname: $("#edit_user_firstname").val(),
+                    user_lastname: $("#edit_user_lastname").val(),
+                    user_birthdate: $("#edit_user_birthdate").val(),
+                    user_nationallity: $("#edit_user_nationallity").val(),
+                    user_religion: $("#edit_user_religion").val(),
+                    user_cardnumber: $("#edit_user_cardnumber").val(),
+                    user_address: $("#edit_user_address").val(),
+                    user_moo: $("#edit_user_moo").val(),
+                    user_tumbon: $("#edit_user_tumbon").val(),
+                    user_ampor: $("#edit_user_ampor").val(),
+                    user_province: $("#edit_user_province").val(),
+                    user_zip: $("#edit_user_zip").val(),
+                    user_tel: $("#edit_user_tel").val(),
+                    username: $("#edit_username").val(),
+                    password: $("#edit_password").val()
+                }
+            ).then(function (response) {
+                getUsers();
+                alert(response.message);
+                $("#userEditModal").modal('hide');
+            });
+        });
+        // EDIT USER
+
+        // DELETE USER
+        function deleteUser(user_id) {
+            if (confirm("คุณต้องการจะลบบัญชีนี้ใช่หรือไม่")) {
+                $.post(
+                    'http://localhost/anutchai/api/users/delete.php',
+                    {
+                        user_id: user_id
+                    }
+                ).then(function (response) {
+                    console.log("DELETE");
+                    if (response.success)
+                        getUsers();
+                    alert(response.message);
+                });
             }
+        }
+        // DELETE USER
+
+        // GET ROOM
+        let room = null;
+        function getRoom() {
+            $("#login-row").hide();
+            $("#user-row").hide();
+            $("#pay-row").hide();
+            $("#report-row").hide();
+            $.get('http://localhost/anutchai/api/rent/readrent.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        response.message.map(function (data, index) {
+                            rows += `<tr>
+                                    <th>${(index + 1)}</th>
+                                    <th>${data.room_number}</th>
+                                    <th>${data.user_firstname} ${data.user_lastname}</th>
+                                    <th><button type="button" class="btn btn-danger" onclick="deleteRoom(${data.rent_id})">ลบ</button></th>
+                                </tr>`;
+                        });
+                        $("#room-body").html(rows);
+                    } else {
+                        $("#room-body").html(response.message);
+                    }
+                    $("#room-row").show();
+                });
+
+            $.get('http://localhost/anutchai/api/room/readempty.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        response.message.map(function (data, index) {
+                            rows += `<option value="${data.room_id}">${data.room_number}</option>`;
+                        });
+                        $("#room_room_id").html(rows);
+                    } else {
+                        $("#room-add-btn").hide();
+                    }
+                });
+
+            $.get('http://localhost/anutchai/api/users/readnorent.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        response.message.map(function (data, index) {
+                            rows += `<option value="${data.user_id}">${data.user_firstname} ${data.user_lastname}</option>`;
+                        });
+                        $("#room_user_id").html(rows);
+                    }
+
+                });
+        }
+        // GET ROOM
+
+        // ADD ROOM
+        $("#add-room-form").submit(function (e) {
+            e.preventDefault();
+            $.post(
+                'http://localhost/anutchai/api/rent/create.php',
+                {
+                    user_id: $("#room_user_id").val(),
+                    room_id: $("#room_room_id").val(),
+                }
+            ).then(function (response) {
+                if (response.success) {
+                    getRoom();
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                }
+                $("#roomAddModal").modal('hide');
+            });
+        });
+        // ADD ROOM
+
+        // DELETE ROOM
+        function deleteRoom(rent_id) {
+            if (confirm("คุณต้องการจะลบสัญญานี้ใช่หรือไม่")) {
+                $.post(
+                    'http://localhost/anutchai/api/rent/delete.php',
+                    {
+                        rent_id: rent_id
+                    }
+                ).then(function (response) {
+                    console.log("DELETE");
+                    if (response.success)
+                        getRoom();
+                    alert(response.message);
+                });
+            }
+        }
+        // DELETE ROOM
+
+        // GET PAY
+        let pay = null;
+        function getPay() {
+            $("#login-row").hide();
+            $("#user-row").hide();
+            $("#room-row").hide();
+            $("#report-row").hide();
+            $.get('http://localhost/anutchai/api/expenses/readrent.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        pay = response.message;
+                        response.message.map(function (data, index) {
+                            rows += `<tr>
+                                    <th>${(index + 1)}</th>
+                                    <th>${data.created_at}</th>
+                                    <th>${data.room_number}</th>
+                                    <th>${data.p_room}</th>
+                                    <th>${data.u_electricity}</th>
+                                    <th>${data.p_electricity * data.u_electricity}</th>
+                                    <th>${data.u_water}</th>
+                                    <th>${data.p_water * data.u_water}</th>
+                                    <th>${(data.p_room * 1) + (data.p_water * data.u_water) + (data.p_electricity * data.u_electricity)}</th>
+                                    <th>${data.status == 1 ? "<button class='btn btn-success' disabled>ชำระแล้ว</button>" : "<button class='btn btn-danger' disabled>ค้างชำระ</button>"}</th>
+                                    <th><button class="btn btn-warning" onclick="editPay(${index})">แก้ไข</button></th>
+                                </tr>`;
+                        });
+                        $("#pay-body").html(rows);
+
+                    }
+                    else {
+                        $("#pay-body").html(response.message);
+                    }
+                    $("#pay-row").show();
+                });
+
+            $.get('http://localhost/anutchai/api/rent/readrent.php')
+                .then(function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        let rows;
+                        response.message.map(function (data, index) {
+                            rows += `<option value="${data.rent_id}">${data.room_number}</option>>`;
+                        });
+                        $("#pay_rent_id").html(rows)
+                    }
+                });
+        }
+        // GET PAY
+
+        // ADD PAY 
+        $("#add-pay-form").submit(function (e) {
+            e.preventDefault();
+            $.post(
+                'http://localhost/anutchai/api/expenses/create.php',
+                {
+                    rent_id: $("#pay_rent_id").val(),
+                    p_room: $("#pay_p_room").val(),
+                    u_electricity: $("#pay_u_electricity").val(),
+                    p_electricity: $("#pay_p_electricity").val(),
+                    u_water: $("#pay_u_water").val(),
+                    p_water: $("#pay_p_water").val(),
+                }
+            ).then(function (response) {
+                if (response.success) {
+                    getPay();
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                }
+                $("#payAddModal").modal('hide');
+            });
+        });
+        // ADD PAY
+
+        // EDIT PAY
+        function editPay(index) {
+            $("#edit_pay_exp_id").val(pay[index].exp_id);
+            $("#edit_pay_rent_id").val(pay[index].rent_id);
+            $("#edit_pay_created_at").val(pay[index].created_at);
+            $("#edit_pay_room_number").val(pay[index].room_number);
+            $("#edit_pay_p_room").val(pay[index].p_room);
+            $("#edit_pay_u_electricity").val(pay[index].u_electricity);
+            $("#edit_pay_p_electricity").val(pay[index].p_electricity);
+            $("#edit_pay_u_water").val(pay[index].u_water);
+            $("#edit_pay_p_water").val(pay[index].p_water);
+            $("#edit_pay_status").val(pay[index].status);
+            $("#payEditModal").modal('show');
+        }
+
+        $("#edit-pay-form").submit(function (e) {
+            e.preventDefault();
+
+            $.post(
+                'http://localhost/anutchai/api/expenses/edit.php',
+                {
+                    exp_id: $("#edit_pay_exp_id").val(),
+                    p_room: $("#edit_pay_p_room").val(),
+                    u_electricity: $("#edit_pay_u_electricity").val(),
+                    p_electricity: $("#edit_pay_p_electricity").val(),
+                    u_water: $("#edit_pay_u_water").val(),
+                    p_water: $("#edit_pay_p_water").val(),
+                    status: $("#edit_pay_status").val(),
+                }
+            ).then(function (response) {
+                getPay();
+                alert(response.message);
+                $("#payEditModal").modal('hide');
+            });
+        });
+        // EDIT PAY
+
+        $(document).ready(function () {
+
+            if (localStorage.hasOwnProperty('admin')) {
+                getUsers();
+            } else {
+                $("#btn-login").show()
+                $("#btn-user").hide()
+                $("#btn-room").hide()
+                $("#btn-pay").hide()
+                $("#btn-report").hide()
+                $("#btn-logout").hide()
+
+                $("#user-row").hide();
+                $("#room-row").hide();
+                $("#pay-row").hide();
+                $("#report-row").hide();
+                $("#login-row").show();
+            }
+
+            // LOGIN ADMIN
             $("#login-form").submit(function (event) {
                 event.preventDefault();
                 console.log("Submit!!");
                 $.post(
                     'http://localhost/anutchai/api/users/admin.php',
                     {
-                        username: $("#username").val(),
-                        password: $("#password").val()
+                        username: $("#login_username").val(),
+                        password: $("#login_password").val()
                     }
                 ).then(function (response) {
                     console.log(response);
@@ -111,6 +915,64 @@
                     console.log(error);
                 });
             });
+            // LOGIN ADMIN
+
+            // MENU CLICK
+            $("#btn-login").click(function () {
+                $("#user-row").hide();
+                $("#room-row").hide();
+                $("#pay-row").hide();
+                $("#report-row").hide();
+                $("#login-row").show();
+            });
+
+            $("#btn-user").click(function () {
+                getUsers();
+            });
+
+            $("#btn-room").click(function () {
+                getRoom();
+            });
+
+            $("#btn-pay").click(function () {
+                getPay();
+            });
+
+            $("#btn-report").click(function () {
+                $("#login-row").hide();
+                $("#user-row").hide();
+                $("#room-row").hide();
+                $("#pay-row").hide();
+                $.get('http://localhost/anutchai/api/report/read.php')
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.success) {
+                            let rows;
+                            response.message.map(function (data, index) {
+                                rows += `<tr>
+                                    <th>${(index + 1)}</th>
+                                    <th>${data.room_number}</th>
+                                    <th>${data.detail}</th>
+                                    <th>${data.status}</th>
+                                </tr>`;
+                            });
+                            $("#report-body").html(rows);
+                        } else {
+                            $("#report-body").html(response.message);
+                        }
+                        $("#report-row").show();
+                    });
+            });
+
+            $("#btn-logout").click(function () {
+                $("#login-row").hide();
+                $("#user-row").hide();
+                $("#room-row").hide();
+                $("#pay-row").hide();
+                localStorage.clear();
+                window.location.href = "admin.html";
+            });
+            // MENU CLICK
         });
 
     </script>

@@ -17,9 +17,7 @@
   // create object user with database connection
   $expenses = new Expenses($db);
 
-  extract($_GET);
-  $expenses->rent_id = $rent_id;
-  $result = $expenses->read();
+  $result = $expenses->readRent();
   
   echo $result;
 
