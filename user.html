@@ -27,7 +27,7 @@
         }
 
         #user-container {
-            width: 500px;
+            width: 600px;
             padding: 32px;
             background: #ffffff;
             display: flex;
@@ -63,24 +63,7 @@
                             </tr>
                         </thead>
                         <tbody id="new">
-                            <!-- <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr> -->
+
                         </tbody>
                     </table>
                 </div>
@@ -98,24 +81,7 @@
                             </tr>
                         </thead>
                         <tbody id="history">
-                            <!-- <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr> -->
+
                         </tbody>
                     </table>
                 </div>
@@ -154,7 +120,7 @@
                         response.message.map(function (data, index) {
                             if (data.status == 1) {
                                 hisCount++;
-                                history += `<tr>
+                                historyRow += `<tr>
                                     <td>${hisCount}</td>
                                     <td>${data.created_at}</td>
                                     <td>${((data.p_room * 1) + (data.u_electricity * data.p_electricity) + (data.u_water * data.p_water))}</td>
